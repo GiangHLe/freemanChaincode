@@ -1,31 +1,18 @@
-""" Neural Network.
-A 2-Hidden Layers Fully Connected Neural Network (a.k.a Multilayer Perceptron)
-implementation with TensorFlow. This example is using the MNIST database
-of handwritten digits (http://yann.lecun.com/exdb/mnist/).
-Links:
-    [MNIST Dataset](http://yann.lecun.com/exdb/mnist/).
-Author: Aymeric Damien
-Project: https://github.com/aymericdamien/TensorFlow-Examples/
-"""
-
 from __future__ import print_function
-
-# Import MNIST data
-# from tensorflow.examples.tutorials.mnist import input_data
-# mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 import numpy as np
 import tensorflow as tf
+class XOR(object):
+    def __init__(**kwags):
+
 # Parameters
 learning_rate = 1
 num_steps = 500
 batch_size = 128
 display_step = 100
 
-# Network Parameters
-n_hidden_1 = 2 # 1st layer number of neurons
-# n_hidden_2 = 2 # 2nd layer number of neurons
-num_input = 2 # MNIST data input (img shape: 28*28)
-num_classes = 2 # MNIST total classes (0-9 digits)
+n_hidden = 2 # 1st layer number of neurons
+num_input = 2 
+num_classes = 2 
 
 input_data = np.array([[1,1],[-1,-1],[1,-1],[-1,1]])
 # tf Graph input
@@ -34,31 +21,23 @@ Y = tf.placeholder("float", [None, num_classes])
 
 # Store layers weight & bias
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input, zn_hidden_1],mean = 0, stddev = 0.02, dtype = tf.dtypes.float32, seed = 200)),
-    # 'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
-    'out': tf.Variable(tf.random_normal([n_hidden_2, num_classes], mean = 0, stddev = 0.02, dtype = tf.dtypes.float32, seed = 200))
+    'h': tf.Variable(tf.random_normal([num_input, zn_hidden_1],mean = 0, stddev = 0.02, dtype = tf.dtypes.float32, seed = 200)),
+    'w_out': tf.Variable(tf.random_normal([n_hidden_2, num_classes], mean = 0, stddev = 0.02, dtype = tf.dtypes.float32, seed = 200))
 }
 biases = {
-    # 'b1': tf.Variable(tf.random_normal([n_hidden_1])),
-    # 'b2': tf.Variable(tf.random_normal([n_hidden_2])),
-    # 'out': tf.Variable(tf.random_normal([num_classes]))
-    'b1': tf.zeros([n_hidden_1], dtype = tf.dtypes.float32)
-    'out': tf.zeros([num_classes], dtype = tf.dtypes.float32)
+    'b': tf.zeros([n_hidden_1], dtype = tf.dtypes.float32),
+    'b_out': tf.zeros([num_classes], dtype = tf.dtypes.float32)
 }
 
 
 # Create model
 def neural_net(x):
-    # Hidden fully connected layer with 256 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-    # Hidden fully connected layer with 256 neurons
-    # layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-    # Output fully connected layer with a neuron for each class
     out_layer = tf.matmul(layer_1, weights['out']) + biases['out']
     return out_layer
 
-# Construct model
 logits = neural_net(X)
+
 prediction = tf.nn.softmax(logits)
 
 # Define loss and optimizer

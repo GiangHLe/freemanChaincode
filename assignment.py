@@ -33,9 +33,9 @@ class FreemanChainCode(object):
                 if value == 255:
                     start_point = (i, j)
                     break
-                else:
-                    continue
-                break
-
+            else:
+                continue
+            break
+    def 
     
     
