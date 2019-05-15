@@ -176,6 +176,7 @@ class FreemanChainCode(object):
         '''
         Show the final solution
         '''
+        #temp
         border, chain_code, differ, shape_no, img = self.result()
         print("Our chain code is {}:".format(chain_code))
         print("Different {}:".format(differ))
