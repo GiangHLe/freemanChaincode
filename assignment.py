@@ -31,8 +31,9 @@ class FreemanChainCode(object):
     def _preprocessing(self):
         image = cv2.imread(self.path,0)
         boudary = self.object_location
-        image = image[boudary[0][0]:boudary[0][1],boudary[1][0]:boudary[1][1]]
-        if image[0,0] == 255:
+        if np.sum(boudary) != 0:
+            image = image[boudary[0][0]:boudary[0][1],boudary[1][0]:boudary[1][1]]
+        if image[0,0] > 80:
             ret, img = cv2.threshold(image, self.thresh,255, cv2.THRESH_BINARY_INV)
         else:
             ret, img = cv2.threshold(image, self.thresh,255, cv2.THRESH_BINARY)
