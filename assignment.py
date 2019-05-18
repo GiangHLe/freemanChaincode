@@ -27,6 +27,7 @@ class FreemanChainCode(object):
         self.thresh = kwargs.pop('threshold', 60)
         self.kernel_size = kwargs.pop('kernel_size', 10)
         self.mor = kwargs.pop('morno', 'closing')
+        self.length = kwargs.pop('shape_length', 1)
 
     def _preprocessing(self):
         image = cv2.imread(self.path,0)
@@ -81,7 +82,7 @@ class FreemanChainCode(object):
                            6,  5,  4]
             num_necess = 5
         dir2idx = dict(zip(directions, range(len(directions))))
-        move = 1
+        move = self.length
         # Move the current point follow the direction
         if self.direction == 8:
             # Columns
@@ -140,14 +141,17 @@ class FreemanChainCode(object):
                         curr_point = new_point
                         break
                 count += 1
-            move+=1
-        return border, chain, img
+            if self.length == 1:
+                move+=1
+            else:
+                break
+        return border, chain, img, move
     def _different(self):
         '''
         Return the different from chain code
         '''
         directions = self.direction
-        _,chain_code,_ = self._get_chain_code()
+        _,chain_code,_,_ = self._get_chain_code()
         result = []
         dir = list(range(directions))
         len_code = len(chain_code)
@@ -166,21 +170,22 @@ class FreemanChainCode(object):
         '''
         This function give the final result, return the boundary point of object
         '''
-        border, chain, img = self._get_chain_code()
+        border, chain, img, length = self._get_chain_code()
         diff = self._different()
         shape = [diff[len(diff)-1]] + diff[:(len(diff)-1)]
         chain_code = (''.join([str(i) for i in chain]))
         differ = (''.join([str(i) for i in diff]))
         shape_no = (''.join([str(i) for i in chain_code]))
-        return border, chain_code, differ, shape_no, img
+        return border, chain_code, differ, shape_no, img, length
     def show(self):
         '''
         Show the final solution
         '''
         #temp
-        border, chain_code, differ, shape_no, img = self.result()
+        border, chain_code, differ, shape_no, img, length = self.result()
         print("Our chain code is {}:".format(chain_code))
         print("Different {}:".format(differ))
         print("Shape number {}:".format(shape_no))
+        print("Length of shape is: {}".format(length))
         mlt.imshow(img, cmap='Greys')
         mlt.plot([i[1] for i in border], [i[0] for i in border])
